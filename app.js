@@ -3,8 +3,10 @@ const bodyParser = require('body-parser');
 const graphqlHttp = require('express-graphql');
 const { buildSchema } = require('graphql');
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const Event = require('./models/event');
+const User = require('./models/user');
 
 const app = express();
 
@@ -22,6 +24,12 @@ app.use(
           date: String!
         }
 
+        type User {
+          _id: ID!
+          email: String!
+          password: String
+        }
+
         input EventInput {
           title: String!
           description: String!
@@ -29,30 +37,34 @@ app.use(
           date: String!
         }
 
+        input UserInput {
+          email: String!
+          password: String!
+        }
+
         type RootQuery {
-          events: [Event!]!
+            events: [Event!]!
         }
 
         type RootMutation {
-          createEvent(eventInput: EventInput): Event
+            createEvent(eventInput: EventInput): Event
+            createUser(userInput: UserInput): User
         }
 
         schema {
-          query: RootQuery
-          mutation: RootMutation
+            query: RootQuery
+            mutation: RootMutation
         }
     `),
     rootValue: {
       events: () => {
         return Event.find()
           .then(events => {
-            console.log(events);
             return events.map(event => {
               return { ...event._doc };
             });
           })
           .catch(err => {
-            console.log(err);
             throw err;
           });
       },
@@ -61,16 +73,49 @@ app.use(
           title,
           description,
           price: +price,
-          date: new Date(date)
+          date: new Date(date),
+          creator: '5dc0a45597b3ca69c3918745'
         });
+        let createdEvent;
         return event
           .save()
           .then(result => {
-            console.log(result);
-            return { ...result._doc };
+            createdEvent = { ...result._doc };
+            return User.findById('5dc0a45597b3ca69c3918745');
+          })
+          .then(user => {
+            if (!user) {
+              throw new Error('User not found.');
+            }
+            user.createdEvents.push(event);
+            return user.save();
+          })
+          .then(result => {
+            return createdEvent;
           })
           .catch(err => {
-            console.log(err);
+            throw err;
+          });
+      },
+      createUser: ({ userInput: { email, password } }) => {
+        return User.findOne({ email })
+          .then(user => {
+            if (user) {
+              throw new Error('User exists already.');
+            }
+            return bcrypt.hash(password, 12);
+          })
+          .then(hashedPassword => {
+            const user = new User({
+              email,
+              password: hashedPassword
+            });
+            return user.save();
+          })
+          .then(result => {
+            return { ...result._doc, password: null };
+          })
+          .catch(err => {
             throw err;
           });
       }
@@ -81,7 +126,7 @@ app.use(
 
 mongoose
   .connect(
-    `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-42wj8.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`,
+    `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-42wj8.mongodb.net/${process.env.MONGO_DB}?retryWrites=true`,
     { useUnifiedTopology: true, useNewUrlParser: true }
   )
   .then(() => {
