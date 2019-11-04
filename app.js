@@ -2,6 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const graphqlHttp = require('express-graphql');
 const { buildSchema } = require('graphql');
+const mongoose = require('mongoose');
+
+const Event = require('./models/event');
 
 const app = express();
 
@@ -11,12 +14,27 @@ app.use(
   '/graphql',
   graphqlHttp({
     schema: buildSchema(`
+        type Event {
+          _id: ID!
+          title: String!
+          description: String!
+          price: Float!
+          date: String!
+        }
+
+        input EventInput {
+          title: String!
+          description: String!
+          price: Float!
+          date: String!
+        }
+
         type RootQuery {
-          events: [String!]!
+          events: [Event!]!
         }
 
         type RootMutation {
-          createEvent(name: String): String
+          createEvent(eventInput: EventInput): Event
         }
 
         schema {
@@ -26,15 +44,49 @@ app.use(
     `),
     rootValue: {
       events: () => {
-        return ['bla', 'blabla', 'blablabla'];
+        return Event.find()
+          .then(events => {
+            console.log(events);
+            return events.map(event => {
+              return { ...event._doc };
+            });
+          })
+          .catch(err => {
+            console.log(err);
+            throw err;
+          });
       },
-      createEvent: args => {
-        const { name } = args;
-        return name;
+      createEvent: ({ eventInput: { title, description, price, date } }) => {
+        const event = new Event({
+          title,
+          description,
+          price: +price,
+          date: new Date(date)
+        });
+        return event
+          .save()
+          .then(result => {
+            console.log(result);
+            return { ...result._doc };
+          })
+          .catch(err => {
+            console.log(err);
+            throw err;
+          });
       }
     },
     graphiql: true
   })
 );
 
-app.listen(3000);
+mongoose
+  .connect(
+    `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-42wj8.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`,
+    { useUnifiedTopology: true, useNewUrlParser: true }
+  )
+  .then(() => {
+    app.listen(3000);
+  })
+  .catch(err => {
+    console.log(err);
+  });
