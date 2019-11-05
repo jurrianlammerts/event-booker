@@ -12,19 +12,26 @@ module.exports = {
       throw err;
     }
   },
-  createEvent: async ({ eventInput: { title, description, price, date } }) => {
+  createEvent: async (
+    { eventInput: { title, description, price, date } },
+    args,
+    req
+  ) => {
+    if (!req.isAuth) {
+      throw new Error('Unauthenticated');
+    }
     const event = new Event({
       title: title,
       description: description,
       price: +price,
       date: new Date(date),
-      creator: '5dc0a45597b3ca69c3918745'
+      creator: req.userId
     });
     let createdEvent;
     try {
       const result = await event.save();
       createdEvent = transfromEvent(result);
-      const creator = await User.findById('5dc0a45597b3ca69c3918745');
+      const creator = await User.findById(req.userId);
 
       if (!creator) {
         throw new Error('User not found.');
