@@ -1,9 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import styled from 'styled-components';
 
+import AuthContext from '../context/AuthContext';
 import Button from '../components/Styles/Button';
 
 function Auth() {
+  const { login } = useContext(AuthContext);
   const [loginPage, setLoginPage] = useState(true);
   const emailInput = useRef(null);
   const passwordInput = useRef(null);
@@ -53,9 +55,19 @@ function Auth() {
         }
         return res.json();
       })
-      .then(resData => {
-        console.log(resData);
-      })
+      .then(
+        ({
+          data,
+          data: {
+            login: { token, userId, tokenExpiration }
+          }
+        }) => {
+          console.log(data);
+          if (data && token) {
+            login(token, userId, tokenExpiration);
+          }
+        }
+      )
       .catch(err => {
         console.log(err);
       });

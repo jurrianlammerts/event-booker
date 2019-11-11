@@ -1,21 +1,33 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
+import AuthContext from '../../context/AuthContext';
+
 function MainNavigation() {
+  const { token, logout } = useContext(AuthContext);
   return (
     <Header>
       <Logo>EventBooker</Logo>
       <NavItems>
-        <li>
-          <NavLink to="/auth">Login</NavLink>
-        </li>
+        {!token && (
+          <li>
+            <NavLink to="/auth">Login</NavLink>
+          </li>
+        )}
         <li>
           <NavLink to="/events">Events</NavLink>
         </li>
-        <li>
-          <NavLink to="/bookings">Bookings</NavLink>
-        </li>
+        {token && (
+          <>
+            <li>
+              <NavLink to="/bookings">Bookings</NavLink>
+            </li>
+            <li>
+              <button onClick={logout}>Logout</button>
+            </li>
+          </>
+        )}
       </NavItems>
     </Header>
   );
@@ -30,9 +42,11 @@ const Header = styled.header`
   width: 100%;
   height: 3.5rem;
   background: #333;
-  padding: 0 1rem;
+  padding: 0 2rem;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
 `;
 
 const Logo = styled.h1`
@@ -46,11 +60,19 @@ const NavItems = styled.ul`
   padding: 0;
   margin: 0;
   list-style: none;
+  align-items: center;
   li {
     margin-left: 1.5rem;
-    a {
+    a,
+    button {
       text-decoration: none;
       color: #999;
+      border: none;
+      font: inherit;
+      background: transparent;
+      vertical-align: middle;
+      margin: 0;
+      padding: 0;
       :hover,
       :active,
       &.active {
