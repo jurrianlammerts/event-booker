@@ -21,6 +21,7 @@ module.exports = {
         singleQuote: true
       }
     ],
+    'no-useless-catch': 0,
     eqeqeq: ['error', 'always']
   }
 };

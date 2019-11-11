@@ -1,8 +1,9 @@
 import React, { useState, useRef, useContext } from 'react';
-import styled from 'styled-components';
 
 import AuthContext from '../context/AuthContext';
 import Button from '../components/Styles/Button';
+
+import Form from '../components/Styles/Form';
 
 function Auth() {
   const { login } = useContext(AuthContext);
@@ -98,23 +99,3 @@ function Auth() {
 }
 
 export default Auth;
-
-const Form = styled.form`
-  width: 25rem;
-  max-width: 80%;
-  margin: 5rem auto;
-
-  .form-control {
-    margin-bottom: 1rem;
-  }
-
-  .form-control label {
-    margin-bottom: 0.5rem;
-  }
-
-  .form-control label,
-  .form-control input {
-    width: 100%;
-    display: block;
-  }
-`;
