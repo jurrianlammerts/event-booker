@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import styled from 'styled-components';
 
 import Button from '../components/Styles/Button';
@@ -9,15 +9,23 @@ import AuthContext from '../context/AuthContext';
 
 function Events() {
   const [creating, setCreating] = useState(false);
-  // const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState([]);
   const titleInput = useRef(null);
   const priceInput = useRef(null);
   const dateInput = useRef(null);
   const descriptionInput = useRef(null);
   const { token } = useContext(AuthContext);
 
+  useEffect(() => {
+    fetchEvents();
+  });
+
   const startCreateEventHandler = () => {
     setCreating(true);
+  };
+
+  const modalCancelHandler = () => {
+    setCreating(false);
   };
 
   const modalConfirmHandler = () => {
@@ -72,7 +80,7 @@ function Events() {
         return res.json();
       })
       .then(resData => {
-        // this.fetchEvents();
+        fetchEvents();
         console.log(resData);
       })
       .catch(err => {
@@ -80,12 +88,56 @@ function Events() {
       });
   };
 
-  const modalCancelHandler = () => {
-    setCreating(false);
+  const fetchEvents = () => {
+    const requestBody = {
+      query: `
+          query {
+            events {
+              _id
+              title
+              description
+              date
+              price
+              creator {
+                _id
+                email
+              }
+            }
+          }
+        `
+    };
+
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then(({ data }) => {
+        setEvents(data.events);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
+  const eventList = events.map(event => (
+    <li key={event._id} className="event-list-item">
+      <h1>{event.title}</h1>
+      <p>{event.description}</p>
+      <small>{event.creator.email}</small>
+    </li>
+  ));
+
   return (
-    <>
+    <StyledPage>
       {creating && <Backdrop />}
       {creating && (
         <Modal
@@ -115,21 +167,40 @@ function Events() {
           </Form>
         </Modal>
       )}
-      <Container>
-        <p>Share your own events here!</p>
-        <Button onClick={startCreateEventHandler}>Create event</Button>
-      </Container>
-    </>
+      {token && (
+        <div className="container">
+          <p>Share your own events here!</p>
+          <Button onClick={startCreateEventHandler}>Create event</Button>
+        </div>
+      )}
+      <ul className="event-list">{eventList}</ul>
+    </StyledPage>
   );
 }
 
 export default Events;
 
-const Container = styled.div`
-  text-align: center;
-  border: 1px solid #333;
-  padding: 1rem;
-  margin: 2rem auto;
-  width: 30rem;
-  max-width: 80%;
+const StyledPage = styled.div`
+  .event-list {
+    width: 40rem;
+    max-width: 90%;
+    margin: 2rem auto;
+    list-style: none;
+    padding: 0;
+  }
+
+  .event-list-item {
+    margin: 1rem 0;
+    padding: 1rem;
+    border: 1px solid #333;
+  }
+
+  .container {
+    text-align: center;
+    border: 1px solid #333;
+    padding: 1rem;
+    margin: 2rem auto;
+    width: 30rem;
+    max-width: 80%;
+  }
 `;
