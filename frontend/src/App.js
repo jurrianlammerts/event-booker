@@ -1,17 +1,21 @@
 import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 
 import Auth from './pages/Auth';
+import Events from './pages/Events';
+import Bookings from './pages/Bookings';
 
 import './App.css';
 
 function App() {
   return (
     <BrowserRouter>
-      <Route path="/" component={null} />
-      <Route path="/auth" component={Auth} />
-      <Route path="/events" component={null} />
-      <Route path="/bookings" component={null} />
+      <Switch>
+        <Redirect from="/" to="auth" exact />
+        <Route path="/auth" component={Auth} />
+        <Route path="/events" component={Events} />
+        <Route path="/bookings" component={Bookings} />
+      </Switch>
     </BrowserRouter>
   );
 }
