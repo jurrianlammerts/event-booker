@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
-function Main() {
+function MainNavigation() {
   return (
     <Header>
       <Logo>EventBooker</Logo>
@@ -21,7 +21,7 @@ function Main() {
   );
 }
 
-export default Main;
+export default MainNavigation;
 
 const Header = styled.header`
   position: fixed;
@@ -52,7 +52,8 @@ const NavItems = styled.ul`
       text-decoration: none;
       color: #999;
       :hover,
-      :active {
+      :active,
+      &.active {
         color: #ddd;
         border-bottom: solid 2px #ddd;
       }

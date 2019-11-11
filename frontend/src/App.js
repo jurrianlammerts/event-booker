@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Auth from './pages/Auth';
 import Events from './pages/Events';
 import Bookings from './pages/Bookings';
-import Nav from './components/Navigation/Main';
+import Nav from './components/Navigation/MainNavigation';
 
 function App() {
   return (
