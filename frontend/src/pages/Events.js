@@ -13,6 +13,8 @@ function Events() {
   const [creating, setCreating] = useState(false);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedEvent, setSelectedEvent] = useState("");
+
   const titleInput = useRef(null);
   const priceInput = useRef(null);
   const dateInput = useRef(null);
@@ -29,6 +31,7 @@ function Events() {
 
   const modalCancelHandler = () => {
     setCreating(false);
+    setSelectedEvent("");
   };
 
   const modalConfirmHandler = () => {
@@ -104,6 +107,12 @@ function Events() {
       });
   };
 
+  const showDetailsHandler = eventId => {
+    setSelectedEvent(events.find(e => e._id === eventId));
+  };
+
+  const bookEventHandler = () => {};
+
   const fetchEvents = () => {
     const requestBody = {
       query: `
@@ -147,7 +156,7 @@ function Events() {
 
   return (
     <StyledPage>
-      {creating && <Backdrop />}
+      {creating || (selectedEvent && <Backdrop />)}
       {creating && (
         <Modal
           title="Add Event"
@@ -176,6 +185,19 @@ function Events() {
           </Form>
         </Modal>
       )}
+      {selectedEvent && (
+        <Modal
+          title={selectedEvent.title}
+          canCancel
+          canConfirm
+          onCancel={modalCancelHandler}
+          onConfirm={bookEventHandler}
+        >
+          <p>{selectedEvent.description}</p>
+          <p>${selectedEvent.price}</p>
+          <small>{new Date(selectedEvent.date).toLocaleDateString()}</small>
+        </Modal>
+      )}
       {token && (
         <div className="container">
           <p>Share your own events here!</p>
@@ -187,7 +209,11 @@ function Events() {
           <Spinner />
         </div>
       ) : (
-        <EventList currentUserId={userId} events={events} />
+        <EventList
+          showDetails={showDetailsHandler}
+          currentUserId={userId}
+          events={events}
+        />
       )}
     </StyledPage>
   );

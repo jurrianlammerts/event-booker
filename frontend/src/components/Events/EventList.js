@@ -2,11 +2,16 @@ import React from "react";
 import styled from "styled-components";
 import EventItem from "./EventItem";
 
-function EventList({ events, currentUserId }) {
+function EventList({ events, currentUserId, showDetails }) {
   return (
     <List>
       {events.map(event => (
-        <EventItem key={event._id} event={event} userId={currentUserId} />
+        <EventItem
+          key={event._id}
+          event={event}
+          userId={currentUserId}
+          showMore={showDetails}
+        />
       ))}
     </List>
   );

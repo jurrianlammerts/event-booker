@@ -3,17 +3,21 @@ import styled from "styled-components";
 import Button from "../Styles/Button";
 // import Modal from "../Modal";
 
-function EventItem({ event: { title, description, creator }, userId }) {
+function EventItem({
+  event: { _id, title, description, price, date, creator },
+  userId,
+  showMore
+}) {
   return (
     <Item>
-      <h1>{title}</h1>
-      <p>{description}</p>
-      {/* <small>{creator.email}</small> */}
+      <h2>{title}</h2>
+      <p>${price}</p>
+      <small>{new Date(date).toLocaleDateString()}</small>
       <div className="controls">
         {userId === creator._id ? (
           <p>This is your event</p>
         ) : (
-          <Button>Details</Button>
+          <Button onClick={() => showMore(_id)}>Details</Button>
         )}
       </div>
     </Item>
