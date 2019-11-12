@@ -7,10 +7,12 @@ import Backdrop from "../components/Backdrop";
 import Form from "../components/Styles/Form";
 import AuthContext from "../context/AuthContext";
 import EventList from "../components/Events/EventList";
+import Spinner from "../components/Spinner";
 
 function Events() {
   const [creating, setCreating] = useState(false);
   const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
   const titleInput = useRef(null);
   const priceInput = useRef(null);
   const dateInput = useRef(null);
@@ -135,6 +137,7 @@ function Events() {
         return res.json();
       })
       .then(({ data }) => {
+        setLoading(false);
         setEvents(data.events);
       })
       .catch(err => {
@@ -179,7 +182,13 @@ function Events() {
           <Button onClick={startCreateEventHandler}>Create event</Button>
         </div>
       )}
-      <EventList currentUserId={userId} events={events} />
+      {loading ? (
+        <div className="centered">
+          <Spinner />
+        </div>
+      ) : (
+        <EventList currentUserId={userId} events={events} />
+      )}
     </StyledPage>
   );
 }
@@ -194,5 +203,10 @@ const StyledPage = styled.div`
     margin: 2rem auto;
     width: 30rem;
     max-width: 80%;
+  }
+  .centered {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
   }
 `;
