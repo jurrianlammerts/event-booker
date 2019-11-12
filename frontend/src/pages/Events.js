@@ -1,11 +1,12 @@
-import React, { useState, useRef, useContext, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState, useRef, useContext, useEffect } from "react";
+import styled from "styled-components";
 
-import Button from '../components/Styles/Button';
-import Modal from '../components/Modal';
-import Backdrop from '../components/Backdrop';
-import Form from '../components/Styles/Form';
-import AuthContext from '../context/AuthContext';
+import Button from "../components/Styles/Button";
+import Modal from "../components/Modal";
+import Backdrop from "../components/Backdrop";
+import Form from "../components/Styles/Form";
+import AuthContext from "../context/AuthContext";
+import EventList from "../components/Events/EventList";
 
 function Events() {
   const [creating, setCreating] = useState(false);
@@ -14,11 +15,11 @@ function Events() {
   const priceInput = useRef(null);
   const dateInput = useRef(null);
   const descriptionInput = useRef(null);
-  const { token } = useContext(AuthContext);
+  const { token, userId } = useContext(AuthContext);
 
   useEffect(() => {
     fetchEvents();
-  });
+  }, []);
 
   const startCreateEventHandler = () => {
     setCreating(true);
@@ -65,17 +66,17 @@ function Events() {
         `
     };
 
-    fetch('http://localhost:8000/graphql', {
-      method: 'POST',
+    fetch("http://localhost:8000/graphql", {
+      method: "POST",
       body: JSON.stringify(requestBody),
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + token
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token
       }
     })
       .then(res => {
         if (res.status !== 200 && res.status !== 201) {
-          throw new Error('Failed!');
+          throw new Error("Failed!");
         }
         return res.json();
       })
@@ -89,6 +90,7 @@ function Events() {
   };
 
   const fetchEvents = () => {
+    console.log("fetchEvents");
     const requestBody = {
       query: `
           query {
@@ -107,16 +109,16 @@ function Events() {
         `
     };
 
-    fetch('http://localhost:8000/graphql', {
-      method: 'POST',
+    fetch("http://localhost:8000/graphql", {
+      method: "POST",
       body: JSON.stringify(requestBody),
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       }
     })
       .then(res => {
         if (res.status !== 200 && res.status !== 201) {
-          throw new Error('Failed!');
+          throw new Error("Failed!");
         }
         return res.json();
       })
@@ -127,14 +129,6 @@ function Events() {
         console.log(err);
       });
   };
-
-  const eventList = events.map(event => (
-    <li key={event._id} className="event-list-item">
-      <h1>{event.title}</h1>
-      <p>{event.description}</p>
-      <small>{event.creator.email}</small>
-    </li>
-  ));
 
   return (
     <StyledPage>
@@ -173,7 +167,7 @@ function Events() {
           <Button onClick={startCreateEventHandler}>Create event</Button>
         </div>
       )}
-      <ul className="event-list">{eventList}</ul>
+      <EventList currentUserId={userId} events={events} />
     </StyledPage>
   );
 }
@@ -181,20 +175,6 @@ function Events() {
 export default Events;
 
 const StyledPage = styled.div`
-  .event-list {
-    width: 40rem;
-    max-width: 90%;
-    margin: 2rem auto;
-    list-style: none;
-    padding: 0;
-  }
-
-  .event-list-item {
-    margin: 1rem 0;
-    padding: 1rem;
-    border: 1px solid #333;
-  }
-
   .container {
     text-align: center;
     border: 1px solid #333;
