@@ -57,10 +57,6 @@ function Events() {
               description
               date
               price
-              creator {
-                _id
-                email
-              }
             }
           }
         `
@@ -80,17 +76,33 @@ function Events() {
         }
         return res.json();
       })
-      .then(resData => {
-        fetchEvents();
-        console.log(resData);
-      })
+      .then(
+        ({
+          data: {
+            createEvent: { _id, title, description, date, price }
+          }
+        }) => {
+          setEvents([
+            {
+              _id,
+              title,
+              description,
+              date,
+              price,
+              creator: {
+                _id: userId
+              }
+            },
+            ...events
+          ]);
+        }
+      )
       .catch(err => {
         console.log(err);
       });
   };
 
   const fetchEvents = () => {
-    console.log("fetchEvents");
     const requestBody = {
       query: `
           query {
