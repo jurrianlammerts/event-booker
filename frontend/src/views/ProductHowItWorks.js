@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -9,6 +9,8 @@ import Typography from '../components/Typography';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+
+import AuthContext from '../context/AuthContext';
 
 const styles = (theme) => ({
   root: {
@@ -41,6 +43,7 @@ const styles = (theme) => ({
   },
   svg: {
     height: 55,
+    fontSize: 48,
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(4),
   },
@@ -56,6 +59,7 @@ const styles = (theme) => ({
 });
 
 function ProductHowItWorks(props) {
+  const { token } = useContext(AuthContext);
   const { classes } = props;
 
   return (
@@ -73,7 +77,7 @@ function ProductHowItWorks(props) {
           <Grid container spacing={5}>
             <Grid item xs={12} md={4}>
               <div className={classes.item}>
-                <VerifiedUserIcon fontSize="large" className={classes.svg} />
+                <VerifiedUserIcon className={classes.svg} />
                 <Typography variant="h5" align="center">
                   Payment protection, guaranteed
                 </Typography>
@@ -81,7 +85,7 @@ function ProductHowItWorks(props) {
             </Grid>
             <Grid item xs={12} md={4}>
               <div className={classes.item}>
-                <MonetizationOnIcon fontSize="large" className={classes.svg} />
+                <MonetizationOnIcon className={classes.svg} />
                 <Typography variant="h5" align="center">
                   Know the price up front
                 </Typography>
@@ -89,7 +93,7 @@ function ProductHowItWorks(props) {
             </Grid>
             <Grid item xs={12} md={4}>
               <div className={classes.item}>
-                <AccountBalanceIcon fontSize="large" className={classes.svg} />
+                <AccountBalanceIcon className={classes.svg} />
                 <Typography variant="h5" align="center">
                   Always the best legal counseling
                 </Typography>
@@ -97,16 +101,29 @@ function ProductHowItWorks(props) {
             </Grid>
           </Grid>
         </div>
-        <Button
-          color="secondary"
-          size="large"
-          variant="contained"
-          className={classes.button}
-          component="a"
-          href="/sign-up/"
-        >
-          Get started
-        </Button>
+        {token ? (
+          <Button
+            color="secondary"
+            variant="contained"
+            size="large"
+            className={classes.button}
+            component="a"
+            href="/dashboard"
+          >
+            Dashboard
+          </Button>
+        ) : (
+          <Button
+            color="secondary"
+            variant="contained"
+            size="large"
+            className={classes.button}
+            component="a"
+            href="/signup"
+          >
+            Register
+          </Button>
+        )}
       </Container>
     </section>
   );

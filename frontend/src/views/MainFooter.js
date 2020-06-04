@@ -72,7 +72,7 @@ const LANGUAGES = [
   },
 ];
 
-export default function AppFooter() {
+export default function MainFooter() {
   const classes = useStyles();
 
   return (

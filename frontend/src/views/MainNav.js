@@ -3,15 +3,19 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
+import Avatar from '@material-ui/core/Avatar';
 import AppBar from '../components/AppBar';
 import Toolbar, { styles as toolbarStyles } from '../components/Toolbar';
 
 import AuthContext from '../context/AuthContext';
-import Typography from '../components/Typography';
 
 const styles = (theme) => ({
   title: {
-    fontSize: 24,
+    fontSize: 32,
+    fontFamily: 'Leckerli One',
+    textTransform: 'capitalize',
+    letterSpacing: '2px',
+    fontWeight: '100',
   },
   placeholder: toolbarStyles(theme).root,
   toolbar: {
@@ -30,15 +34,22 @@ const styles = (theme) => ({
   },
   rightLink: {
     fontSize: 16,
+    lineHeight: '40px',
     color: theme.palette.common.white,
     marginLeft: theme.spacing(3),
   },
   linkSecondary: {
     color: theme.palette.secondary.main,
   },
+  avatar: {
+    backgroundColor: theme.palette.secondary.main,
+    color: theme.palette.secondary.light,
+    fontFamily: 'Leckerli One',
+    fontWeight: '100',
+  },
 });
 
-function AppAppBar(props) {
+function MainNav(props) {
   const { token, logout } = useContext(AuthContext);
   const { classes } = props;
 
@@ -56,45 +67,49 @@ function AppAppBar(props) {
           >
             {'talento'}
           </Link>
-          {/* {!token && } */}
+
           <div className={classes.right}>
-            <Link
-              color="inherit"
-              variant="h6"
-              underline="none"
-              className={classes.rightLink}
-              href="/signin"
-            >
-              {'Sign In'}
-            </Link>
-            <Link
-              variant="h6"
-              underline="none"
-              className={clsx(classes.rightLink, classes.linkSecondary)}
-              href="/signup"
-            >
-              {'Sign Up'}
-            </Link>
+            {!token && (
+              <>
+                <Link
+                  color="inherit"
+                  variant="h6"
+                  underline="none"
+                  className={classes.rightLink}
+                  href="/signin"
+                >
+                  {'Sign In'}
+                </Link>
+                <Link
+                  variant="h6"
+                  underline="none"
+                  className={clsx(classes.rightLink, classes.linkSecondary)}
+                  href="/signup"
+                >
+                  {'Sign Up'}
+                </Link>
+              </>
+            )}
             {token && (
               <>
+                <Link
+                  variant="h6"
+                  underline="none"
+                  href="#"
+                  alt="logout"
+                  className={classes.rightLink}
+                  onClick={logout}
+                >
+                  Logout
+                </Link>
                 <Link
                   variant="h6"
                   underline="none"
                   className={clsx(classes.rightLink, classes.linkSecondary)}
                   href="/dashboard"
                 >
-                  Dashboard
+                  <Avatar className={classes.avatar}>{'J'}</Avatar>
                 </Link>
-                <div role="button" alt="logout" onClick={logout}>
-                  <Typography
-                    color="inherit"
-                    variant="h6"
-                    underline="none"
-                    className={classes.rightLink}
-                  >
-                    Logout
-                  </Typography>
-                </div>
               </>
             )}
           </div>
@@ -105,8 +120,8 @@ function AppAppBar(props) {
   );
 }
 
-AppAppBar.propTypes = {
+MainNav.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(AppAppBar);
+export default withStyles(styles)(MainNav);
