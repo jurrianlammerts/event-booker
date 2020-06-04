@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 
-import Nav from './components/Navigation/MainNavigation';
+// import Nav from './components/Navigation/MainNavigation';
 import AuthContext from './context/AuthContext';
-import AuthPage from './pages/Auth';
+// import AuthPage from './pages/Auth';
 import EventsPage from './pages/Events';
 import BookingsPage from './pages/Bookings';
+import HomePage from './pages/Home';
+
+import SignInPage from './pages/SignIn';
+import SignUpPage from './pages/SignUp';
 
 function App() {
   const [token, setToken] = useState(null);
@@ -25,14 +29,16 @@ function App() {
   return (
     <BrowserRouter>
       <AuthContext.Provider value={{ token, userId, login, logout }}>
-        <Nav />
         <Page>
           <Switch>
             {token && <Redirect from="/" to="events" exact />}
             {token && <Redirect from="/auth" to="events" exact />}
-            {!token && <Route path="/auth" component={AuthPage} />}
+            {!token && <Route path="/signup" component={SignUpPage} />}
+            {!token && <Route path="/signin" component={SignInPage} />}
             <Route path="/events" component={EventsPage} />
-            {token && <Route path="/bookings" component={BookingsPage} />}
+            <Route path="/" component={HomePage} />
+
+            {token && <Route path="/dashboard" component={BookingsPage} />}
             {!token && <Redirect to="/auth" exact />}
           </Switch>
         </Page>
