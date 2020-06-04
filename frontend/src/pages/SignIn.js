@@ -1,14 +1,14 @@
 import withRoot from '../withRoot';
 
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import AuthContext from '../context/AuthContext';
 
 import { Field, Form, FormSpy } from 'react-final-form';
 import { makeStyles } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
 import Typography from '../components/Typography';
-import AppFooter from '../views/AppFooter';
-import AppAppBar from '../views/AppAppBar';
+import MainFooter from '../views/MainFooter';
+import MainNav from '../views/MainNav';
 import AppForm from '../views/AppForm';
 import { email, required } from '../form/validation';
 import RFTextField from '../form/RFTextField';
@@ -31,8 +31,9 @@ const useStyles = makeStyles((theme) => ({
 function SignIn() {
   const classes = useStyles();
   const { login } = useContext(AuthContext);
+  const [error, setError] = useState('');
 
-  const [sent, setSent] = React.useState(false);
+  const [sent, setSent] = useState(false);
 
   const validate = (values) => {
     const errors = required(['email', 'password'], values);
@@ -48,12 +49,12 @@ function SignIn() {
   };
 
   const onSubmit = (values) => {
-    const { email, password } = values;
+    setSent(true);
 
     const requestBody = {
       query: `
         query {
-          login(email: "${email}", password: "${password}") {
+          login(email: "${values.email}", password: "${values.password}") {
             userId
             token
             tokenExpiration
@@ -71,31 +72,40 @@ function SignIn() {
     })
       .then((res) => {
         if (res.status !== 200 && res.status !== 201) {
+          setSent(false);
+          setError('Server error: ', res.status);
           throw new Error('Failed!');
         }
         return res.json();
       })
-      .then(
-        ({
-          data,
-          data: {
-            login: { token, userId, tokenExpiration },
-          },
-        }) => {
-          console.log(data);
-          if (data && token) {
+      .then((res) => {
+        if (res.errors) {
+          setError(res.errors[0].message);
+          setSent(false);
+          return;
+        }
+
+        if (res.data) {
+          const {
+            data: {
+              login: { token, userId, tokenExpiration },
+            },
+          } = res;
+          if (token) {
             login(token, userId, tokenExpiration);
           }
-        },
-      )
+        }
+      })
       .catch((err) => {
+        setSent(false);
+        setError('Error: ', err);
         console.log(err);
       });
   };
 
   return (
     <React.Fragment>
-      <AppAppBar />
+      <MainNav />
       <AppForm>
         <React.Fragment>
           <Typography variant="h3" gutterBottom marked="center" align="center">
@@ -107,6 +117,11 @@ function SignIn() {
               Sign Up here
             </Link>
           </Typography>
+          {error && (
+            <FormFeedback className={classes.feedback} error>
+              {error}
+            </FormFeedback>
+          )}
         </React.Fragment>
         <Form
           onSubmit={onSubmit}
@@ -166,7 +181,7 @@ function SignIn() {
           </Link>
         </Typography>
       </AppForm>
-      <AppFooter />
+      <MainFooter />
     </React.Fragment>
   );
 }

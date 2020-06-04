@@ -3,22 +3,22 @@ import withRoot from '../withRoot';
 import React from 'react';
 import ProductCategories from '../views/ProductCategories';
 import ProductSmokingHero from '../views/ProductSmokingHero';
-import AppFooter from '../views/AppFooter';
+import MainFooter from '../views/MainFooter';
 import ProductHero from '../views/ProductHero';
 import ProductHowItWorks from '../views/ProductHowItWorks';
 import ProductCTA from '../views/ProductCTA';
-import AppAppBar from '../views/AppAppBar';
+import MainNav from '../views/MainNav';
 
 function Index() {
   return (
     <React.Fragment>
-      <AppAppBar />
+      <MainNav />
       <ProductHero />
       <ProductCategories />
       <ProductHowItWorks />
       <ProductCTA />
       <ProductSmokingHero />
-      <AppFooter />
+      <MainFooter />
     </React.Fragment>
   );
 }

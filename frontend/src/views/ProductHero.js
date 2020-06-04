@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '../components/Button';
 import Typography from '../components/Typography';
 import ProductHeroLayout from './ProductHeroLayout';
+
+import AuthContext from '../context/AuthContext';
 
 const backgroundImage =
   'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1363&q=80';
@@ -30,11 +32,11 @@ const styles = (theme) => ({
 });
 
 function ProductHero(props) {
+  const { token } = useContext(AuthContext);
   const { classes } = props;
 
   return (
     <ProductHeroLayout backgroundClassName={classes.background}>
-      {/* Increase the network loading priority of the background image. */}
       <img
         style={{ display: 'none' }}
         src={backgroundImage}
@@ -51,18 +53,31 @@ function ProductHero(props) {
       >
         Find the perfect freelance services for your business
       </Typography>
-      <Button
-        color="secondary"
-        variant="contained"
-        size="large"
-        className={classes.button}
-        component="a"
-        href="/premium-themes/onepirate/sign-up/"
-      >
-        Register
-      </Button>
+      {token ? (
+        <Button
+          color="secondary"
+          variant="contained"
+          size="large"
+          className={classes.button}
+          component="a"
+          href="/dashboard"
+        >
+          Dashboard
+        </Button>
+      ) : (
+        <Button
+          color="secondary"
+          variant="contained"
+          size="large"
+          className={classes.button}
+          component="a"
+          href="/signup"
+        >
+          Register
+        </Button>
+      )}
       <Typography variant="body2" color="inherit" className={classes.more}>
-        Discover the experience
+        Learn more
       </Typography>
     </ProductHeroLayout>
   );
