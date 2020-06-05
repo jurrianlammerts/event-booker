@@ -2,11 +2,13 @@ import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { withStyles } from '@material-ui/core/styles';
-import Link from '@material-ui/core/Link';
+
 import Avatar from '@material-ui/core/Avatar';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Divider from '@material-ui/core/Divider';
+import StyledLink from '@material-ui/core/Link';
+import { Link } from 'react-router-dom';
 
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -60,7 +62,8 @@ const styles = (theme) => ({
     border: '1px solid black',
   },
   menuLink: {
-    display: 'inline-flex',
+    textDecoration: 'none',
+    color: theme.palette.primary.main,
   },
 });
 
@@ -102,7 +105,7 @@ function MainNav(props) {
       <AppBar position="fixed">
         <Toolbar className={classes.toolbar}>
           <div className={classes.left} />
-          <Link
+          <StyledLink
             variant="h6"
             underline="none"
             color="inherit"
@@ -110,12 +113,12 @@ function MainNav(props) {
             href="/"
           >
             {'talento'}
-          </Link>
+          </StyledLink>
 
           <div className={classes.right}>
             {!token && (
               <>
-                <Link
+                <StyledLink
                   color="inherit"
                   variant="h6"
                   underline="none"
@@ -123,15 +126,15 @@ function MainNav(props) {
                   href="/signin"
                 >
                   {'Sign In'}
-                </Link>
-                <Link
+                </StyledLink>
+                <StyledLink
                   variant="h6"
                   underline="none"
                   className={clsx(classes.rightLink, classes.linkSecondary)}
                   href="/signup"
                 >
                   {'Sign Up'}
-                </Link>
+                </StyledLink>
               </>
             )}
             {token && (
@@ -151,46 +154,37 @@ function MainNav(props) {
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem>
-                    <Link
-                      className={classes.menuLink}
-                      underline="none"
-                      href="/dashboard"
-                      alt="dashboard"
-                    >
+                  <Link to="/dashboard" className={classes.menuLink}>
+                    <MenuItem>
                       <ListItemIcon>
                         <DashboardIcon fontSize="small" />
                       </ListItemIcon>
-                      <ListItemText primary="Dashboard" />
-                    </Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <Link
-                      className={classes.menuLink}
-                      underline="none"
-                      href="/inbox"
-                      alt="inbox"
-                    >
+                      <ListItemText
+                        className={classes.menuText}
+                        primary="Dashboard"
+                      />
+                    </MenuItem>
+                  </Link>
+                  <Link to="/inbox" className={classes.menuLink}>
+                    <MenuItem>
                       <ListItemIcon>
                         <InboxIcon fontSize="small" />
                       </ListItemIcon>
-                      <ListItemText primary="Inbox" />
-                    </Link>
-                  </MenuItem>
+                      <ListItemText
+                        className={classes.menuText}
+                        primary="Inbox"
+                      />
+                    </MenuItem>
+                  </Link>
                   <Divider className={classes.divider} />
-
-                  <MenuItem>
-                    <Link
-                      className={classes.menuLink}
-                      underline="none"
-                      alt="logout"
-                      onClick={logout}
-                    >
-                      <ListItemIcon>
-                        <ExitToAppIcon fontSize="small" />
-                      </ListItemIcon>
-                      <ListItemText primary="Logout" />
-                    </Link>
+                  <MenuItem onClick={logout}>
+                    <ListItemIcon>
+                      <ExitToAppIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText
+                      className={classes.menuText}
+                      primary="Logout"
+                    />
                   </MenuItem>
                 </StyledMenu>
               </>

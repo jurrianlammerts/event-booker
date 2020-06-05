@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
-import styled from 'styled-components';
 
 import AuthContext from './context/AuthContext';
 import EventsPage from './pages/Events';
