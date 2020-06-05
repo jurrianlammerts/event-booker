@@ -35,29 +35,23 @@ function App() {
   return (
     <BrowserRouter>
       <AuthContext.Provider value={{ token, userId, login, logout }}>
-        <Page>
-          <Switch>
-            {token && <Redirect from="/signup" to="dashboard" exact />}
-            {token && <Redirect from="/signin" to="dashboard" exact />}
+        <Switch>
+          {token && <Redirect from="/signup" to="dashboard" exact />}
+          {token && <Redirect from="/signin" to="dashboard" exact />}
 
-            {!token && (
-              <Route path="/forgot-password" component={ForgotPasswordPage} />
-            )}
-            {!token && <Route path="/signup" component={SignUpPage} />}
-            {!token && <Route path="/signin" component={SignInPage} />}
-            {token && <Route path="/dashboard" component={DashboardPage} />}
+          {!token && (
+            <Route path="/forgot-password" component={ForgotPasswordPage} />
+          )}
+          {!token && <Route path="/signup" component={SignUpPage} />}
+          {!token && <Route path="/signin" component={SignInPage} />}
+          {token && <Route path="/dashboard" component={DashboardPage} />}
 
-            <Route path="/events" component={EventsPage} />
-            <Route path="/" component={HomePage} />
-          </Switch>
-        </Page>
+          <Route path="/events" component={EventsPage} />
+          <Route path="/" component={HomePage} />
+        </Switch>
       </AuthContext.Provider>
     </BrowserRouter>
   );
 }
 
 export default App;
-
-const Page = styled.main`
-  margin: 4rem 2.5rem;
-`;

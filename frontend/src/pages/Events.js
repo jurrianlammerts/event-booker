@@ -7,7 +7,7 @@ import Backdrop from "../components/Backdrop";
 import Form from "../components/Styles/Form";
 import AuthContext from "../context/AuthContext";
 import EventList from "../components/Events/EventList";
-import Spinner from "../components/Spinner";
+
 
 function Events() {
   const [creating, setCreating] = useState(false);
@@ -49,9 +49,6 @@ function Events() {
     ) {
       return;
     }
-
-    const event = { title, price, date, description };
-    console.log(event);
 
     const requestBody = {
       query: `
@@ -206,7 +203,7 @@ function Events() {
       )}
       {loading ? (
         <div className="centered">
-          <Spinner />
+          <h1>loading</h1>
         </div>
       ) : (
         <EventList
