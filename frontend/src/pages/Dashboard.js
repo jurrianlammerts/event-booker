@@ -109,13 +109,16 @@ function Dashboard() {
       {
         title: 'Phone',
         field: 'phone',
-        type: 'numeric',
       },
       {
         title: 'Finished',
         field: 'isDone',
         type: 'boolean',
         defaultSort: 'desc',
+      },
+      {
+        title: 'Documents',
+        field: 'documents',
       },
     ],
     data: [
@@ -200,8 +203,7 @@ function Dashboard() {
                 localization={{
                   body: {
                     editRow: {
-                      deleteText:
-                        'Are you sure?',
+                      deleteText: 'Are you sure?',
                     },
                   },
                 }}

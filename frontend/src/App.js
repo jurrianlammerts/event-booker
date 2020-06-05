@@ -5,6 +5,7 @@ import AuthContext from './context/AuthContext';
 import EventsPage from './pages/Events';
 import DashboardPage from './pages/Dashboard';
 import HomePage from './pages/Home';
+import InboxPage from './pages/Inbox';
 
 import SignInPage from './pages/SignIn';
 import SignUpPage from './pages/SignUp';
@@ -37,14 +38,13 @@ function App() {
         <Switch>
           {token && <Redirect from="/signup" to="dashboard" exact />}
           {token && <Redirect from="/signin" to="dashboard" exact />}
-
           {!token && (
             <Route path="/forgot-password" component={ForgotPasswordPage} />
           )}
           {!token && <Route path="/signup" component={SignUpPage} />}
           {!token && <Route path="/signin" component={SignInPage} />}
           {token && <Route path="/dashboard" component={DashboardPage} />}
-
+          {token && <Route path="/inbox" component={InboxPage} />}
           <Route path="/events" component={EventsPage} />
           <Route path="/" component={HomePage} />
         </Switch>
