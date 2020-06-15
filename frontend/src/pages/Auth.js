@@ -11,7 +11,7 @@ function Auth() {
   const emailInput = useRef(null);
   const passwordInput = useRef(null);
 
-  const submitHandler = e => {
+  const submitHandler = (e) => {
     e.preventDefault();
     const email = emailInput.current.value;
     const password = passwordInput.current.value;
@@ -27,7 +27,7 @@ function Auth() {
             tokenExpiration
           }
         }
-      `
+      `,
     };
 
     if (!loginPage) {
@@ -39,18 +39,18 @@ function Auth() {
               email
             }
           }
-        `
+        `,
       };
     }
 
-    fetch('http://localhost:8000/graphql', {
+    fetch(process.env.REACT_APP_URL, {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     })
-      .then(res => {
+      .then((res) => {
         if (res.status !== 200 && res.status !== 201) {
           throw new Error('Failed!');
         }
@@ -60,16 +60,16 @@ function Auth() {
         ({
           data,
           data: {
-            login: { token, userId, tokenExpiration }
-          }
+            login: { token, userId, tokenExpiration },
+          },
         }) => {
           console.log(data);
           if (data && token) {
             login(token, userId, tokenExpiration);
           }
-        }
+        },
       )
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   };

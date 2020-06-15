@@ -63,7 +63,7 @@ function Events() {
         `
     };
 
-    fetch("http://localhost:8000/graphql", {
+    fetch(process.env.REACT_APP_URL, {
       method: "POST",
       body: JSON.stringify(requestBody),
       headers: {
@@ -128,7 +128,7 @@ function Events() {
         `
     };
 
-    fetch("http://localhost:8000/graphql", {
+    fetch(process.env.REACT_APP_URL, {
       method: "POST",
       body: JSON.stringify(requestBody),
       headers: {
