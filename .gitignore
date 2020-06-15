@@ -1,3 +1,6 @@
 /node_modules
 nodemon.json
+<<<<<<< HEAD
 .env
+=======
+>>>>>>> FETCH_HEAD

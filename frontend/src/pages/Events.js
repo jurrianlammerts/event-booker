@@ -8,7 +8,6 @@ import Form from "../components/Styles/Form";
 import AuthContext from "../context/AuthContext";
 import EventList from "../components/Events/EventList";
 
-
 function Events() {
   const [creating, setCreating] = useState(false);
   const [events, setEvents] = useState([]);
