@@ -20,24 +20,24 @@ function App() {
     const savedUser = JSON.parse(localStorage.getItem('user'));
     const savedProfile = JSON.parse(localStorage.getItem('profile'));
 
-    console.log(savedProfile);
+    console.log('savedUser: ', savedUser);
+    console.log('savedProfile: ', savedProfile);
     savedUser && setUser(savedUser);
     savedProfile && setProfile(savedProfile);
   }, []);
 
-  const completeProfile = (data) => {
+  const editProfile = (data) => {
     console.log(data);
-    if (!profile) {
-      localStorage.setItem('profile', JSON.stringify(user));
-    }
+    localStorage.setItem('profile', JSON.stringify(data));
 
     setProfile(profile);
   };
 
   const login = (name, token, userId, tokenExpiration) => {
     const user = { userId, token, name };
+    console.log(user)
     localStorage.setItem('user', JSON.stringify(user));
-    setUser(token);
+    setUser(user);
     setUserId(userId);
   };
 
@@ -50,7 +50,7 @@ function App() {
   return (
     <BrowserRouter>
       <AuthContext.Provider
-        value={{ user, userId, profile, login, logout, completeProfile }}
+        value={{ user, userId, profile, login, logout, editProfile }}
       >
         <Switch>
           {user && <Redirect from="/signup" to="dashboard" exact />}

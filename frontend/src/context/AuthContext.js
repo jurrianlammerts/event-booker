@@ -5,7 +5,7 @@ const AuthContext = createContext({
   user: null,
   userId: null,
   profile: null,
-  completeProfile: () => {},
+  editProfile: () => {},
   login: () => {},
   logout: () => {},
 });
