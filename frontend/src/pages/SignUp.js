@@ -54,11 +54,14 @@ function SignUp() {
   const onSubmit = (values) => {
     setSent(true);
 
+    console.log('values: ', values);
+
     const requestBody = {
       query: `
           mutation {
-            createUser(userInput: {email: "${values.email}", password: "${values.password}"}) {
+            createUser(userInput: { name: "${values.firstName} ${values.lastName}", email: "${values.email}", password: "${values.password}"}) {
               _id
+              name
               email
             }
           }
@@ -92,6 +95,7 @@ function SignUp() {
               query {
                 login(email: "${values.email}", password: "${values.password}") {
                   userId
+                  name
                   token
                   tokenExpiration
                 }
@@ -109,6 +113,7 @@ function SignUp() {
             .then((res) => {
               if (res.status !== 200 && res.status !== 201) {
                 setSent(false);
+                console.log(res);
                 setError('Server error: ', res.status);
                 throw new Error('Failed!');
               }
@@ -118,11 +123,11 @@ function SignUp() {
               ({
                 data,
                 data: {
-                  login: { token, userId, tokenExpiration },
+                  login: { name, token, userId, tokenExpiration },
                 },
               }) => {
                 if (data && token) {
-                  login(token, userId, tokenExpiration);
+                  login(name, token, userId, tokenExpiration);
                 }
               },
             )

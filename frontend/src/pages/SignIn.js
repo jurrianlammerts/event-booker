@@ -55,6 +55,7 @@ function SignIn() {
       query: `
         query {
           login(email: "${values.email}", password: "${values.password}") {
+            name
             userId
             token
             tokenExpiration

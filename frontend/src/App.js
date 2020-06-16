@@ -12,39 +12,56 @@ import SignUpPage from './pages/SignUp';
 import ForgotPasswordPage from './pages/ForgotPassword';
 
 function App() {
-  const [token, setToken] = useState(null);
+  const [user, setUser] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [profile, setProfile] = useState(null);
 
   useEffect(() => {
-    const savedToken = localStorage.getItem('token');
-    savedToken && setToken(savedToken);
+    const savedUser = JSON.parse(localStorage.getItem('user'));
+    const savedProfile = JSON.parse(localStorage.getItem('profile'));
+
+    console.log(savedProfile);
+    savedUser && setUser(savedUser);
+    savedProfile && setProfile(savedProfile);
   }, []);
 
-  const login = (token, userId, tokenExpiration) => {
-    localStorage.setItem('token', token);
-    setToken(token);
+  const completeProfile = (data) => {
+    console.log(data);
+    if (!profile) {
+      localStorage.setItem('profile', JSON.stringify(user));
+    }
+
+    setProfile(profile);
+  };
+
+  const login = (name, token, userId, tokenExpiration) => {
+    const user = { userId, token, name };
+    localStorage.setItem('user', JSON.stringify(user));
+    setUser(token);
     setUserId(userId);
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
-    setToken(null);
+    localStorage.removeItem('user');
+    setUser(null);
     setUserId(null);
   };
 
   return (
     <BrowserRouter>
-      <AuthContext.Provider value={{ token, userId, login, logout }}>
+      <AuthContext.Provider
+        value={{ user, userId, profile, login, logout, completeProfile }}
+      >
         <Switch>
-          {token && <Redirect from="/signup" to="dashboard" exact />}
-          {token && <Redirect from="/signin" to="dashboard" exact />}
-          {!token && (
+          {user && <Redirect from="/signup" to="dashboard" exact />}
+          {user && <Redirect from="/signin" to="dashboard" exact />}
+          {!user && (
             <Route path="/forgot-password" component={ForgotPasswordPage} />
           )}
-          {!token && <Route path="/signup" component={SignUpPage} />}
-          {!token && <Route path="/signin" component={SignInPage} />}
-          {token && <Route path="/dashboard" component={DashboardPage} />}
-          {token && <Route path="/inbox" component={InboxPage} />}
+          {!user && <Route path="/signup" component={SignUpPage} />}
+          {!user && <Route path="/signin" component={SignInPage} />}
+          {user && <Route path="/dashboard" component={DashboardPage} />}
+          {user && <Route path="/inbox" component={InboxPage} />}
           <Route path="/events" component={EventsPage} />
           <Route path="/" component={HomePage} />
         </Switch>

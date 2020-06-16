@@ -1,27 +1,17 @@
 module.exports = {
-  extends: [
-    'eslint:recommended',
-    'plugin:react/recommended',
-    'prettier',
-    'prettier/react'
-  ],
-  plugins: ['prettier', 'flowtype'],
+  extends: ['eslint:recommended', 'plugin:react/recommended'],
+  plugins: ['flowtype'],
   parserOptions: {
-    ecmaVersion: 2017
+    ecmaVersion: 2017,
   },
+  parser: 'babel-eslint',
   env: {
     es6: true,
     node: true,
-    browser: true
+    browser: true,
   },
   rules: {
-    'prettier/prettier': [
-      'error',
-      {
-        singleQuote: true
-      }
-    ],
     'no-useless-catch': 0,
-    eqeqeq: ['error', 'always']
-  }
+    eqeqeq: ['error', 'always'],
+  },
 };

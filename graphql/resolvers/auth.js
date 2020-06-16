@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 module.exports = {
-  createUser: async ({ userInput: { email, password } }) => {
+  createUser: async ({ userInput: { name, email, password } }) => {
     try {
       const existingUser = await User.findOne({ email });
       if (existingUser) {
@@ -12,11 +12,16 @@ module.exports = {
       const hashedPassword = await bcrypt.hash(password, 12);
 
       const user = new User({
+        name,
         email,
-        password: hashedPassword
+        password: hashedPassword,
       });
 
+      console.log('user: ', user);
+
       const result = await user.save();
+
+      console.log('result: ', result)
 
       return { ...result._doc, password: null, _id: result.id };
     } catch (err) {
@@ -33,8 +38,8 @@ module.exports = {
       throw new Error('Password is incorrect');
     }
     const token = jwt.sign({ userId: user.id, email }, 'supersecretkey', {
-      expiresIn: '1h'
+      expiresIn: '1h',
     });
-    return { userId: user.id, token, tokenExpiration: 1 };
-  }
+    return { name: user.name, userId: user.id, token, tokenExpiration: 1 };
+  },
 };

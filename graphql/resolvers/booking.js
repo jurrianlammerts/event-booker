@@ -1,6 +1,6 @@
 const Booking = require('../../models/booking');
 const Event = require('../../models/event');
-const { transfromBookings } = require('./merge');
+const { transfromBooking, transfromEvent } = require('./merge');
 
 module.exports = {
   bookings: async (args, req) => {
@@ -9,7 +9,7 @@ module.exports = {
     }
     try {
       const bookings = await Booking.find();
-      return bookings.map(booking => {
+      return bookings.map((booking) => {
         return transfromBooking(booking);
       });
     } catch (err) {
@@ -23,7 +23,7 @@ module.exports = {
     const fetchedEvent = await Event.findOne({ _id: eventId });
     const booking = new Booking({
       user: req.userId,
-      event: fetchedEvent
+      event: fetchedEvent,
     });
     const result = await booking.save();
     return transfromBooking(result);
@@ -40,5 +40,5 @@ module.exports = {
     } catch (err) {
       throw err;
     }
-  }
+  },
 };

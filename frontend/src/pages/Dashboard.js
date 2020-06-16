@@ -1,6 +1,7 @@
 import withRoot from '../withRoot';
 
-import React, { useState, forwardRef } from 'react';
+import React, { useState, forwardRef, useEffect, useContext } from 'react';
+import AuthContext from '../context/AuthContext';
 import { makeStyles } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
@@ -99,6 +100,8 @@ const useStyles = makeStyles((theme) => ({
 
 function Dashboard() {
   const classes = useStyles();
+  const { user: currentUser } = useContext(AuthContext);
+  
   const [state, setState] = useState({
     columns: [
       { title: 'Name', field: 'name' },
@@ -176,7 +179,7 @@ function Dashboard() {
             <Paper className={classes.paper}>
               <Avatar className={classes.avatar}>{'J'}</Avatar>
               <Typography className={classes.profile} variant="h5">
-                {'Jurrian Lammerts'}
+                {currentUser.name}
               </Typography>
               <Divider className={classes.divider} />
               <div className={classes.detailLine}>

@@ -89,7 +89,7 @@ const StyledMenu = withStyles({
 
 function MainNav(props) {
   const { classes } = props;
-  const { token, logout } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
@@ -116,7 +116,7 @@ function MainNav(props) {
           </StyledLink>
 
           <div className={classes.right}>
-            {!token && (
+            {!user && (
               <>
                 <StyledLink
                   color="inherit"
@@ -137,7 +137,7 @@ function MainNav(props) {
                 </StyledLink>
               </>
             )}
-            {token && (
+            {user && (
               <>
                 <Avatar
                   aria-controls="customized-menu"
