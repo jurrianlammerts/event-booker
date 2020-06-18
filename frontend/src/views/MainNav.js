@@ -145,7 +145,7 @@ function MainNav(props) {
                   onClick={handleClick}
                   className={classes.avatar}
                 >
-                  {user.name.charAt(0)}
+                  {user.name.charAt(0).toUpperCase()}
                 </Avatar>
                 <StyledMenu
                   id="customized-menu"

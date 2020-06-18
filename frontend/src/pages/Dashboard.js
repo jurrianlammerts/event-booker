@@ -45,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
   },
   profile: {
     textAlign: 'center',
+    textTransform: 'capitalize',
   },
   detailLine: {
     display: 'inline-flex',
@@ -70,7 +71,7 @@ function Dashboard() {
             <Grid item xs={12} sm={4} md={3}>
               <Paper className={classes.paper}>
                 <Avatar className={classes.avatar}>
-                  {user.name.charAt(0)}
+                  {user.name.charAt(0).toUpperCase()}
                 </Avatar>
                 <Typography className={classes.profile} variant="h5">
                   {user.name}

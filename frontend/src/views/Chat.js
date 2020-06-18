@@ -59,7 +59,7 @@ const Chat = () => {
               <ListItem button key="RemySharp">
                 <ListItemIcon>
                   <Avatar className={classes.avatar}>
-                    {user.name.charAt(0)}
+                    {user.name.charAt(0).toUpperCase()}
                   </Avatar>
                 </ListItemIcon>
                 <ListItemText primary={user.name}></ListItemText>
