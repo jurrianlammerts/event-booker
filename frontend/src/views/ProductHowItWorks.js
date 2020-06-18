@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -8,7 +8,7 @@ import Typography from '../components/Typography';
 
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 
 import AuthContext from '../context/AuthContext';
 
@@ -59,7 +59,7 @@ const styles = (theme) => ({
 });
 
 function ProductHowItWorks(props) {
-  const { token } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const { classes } = props;
 
   return (
@@ -79,7 +79,7 @@ function ProductHowItWorks(props) {
               <div className={classes.item}>
                 <VerifiedUserIcon className={classes.svg} />
                 <Typography variant="h5" align="center">
-                  Payment protection, guaranteed
+                  Guaranteed payments
                 </Typography>
               </div>
             </Grid>
@@ -87,21 +87,21 @@ function ProductHowItWorks(props) {
               <div className={classes.item}>
                 <MonetizationOnIcon className={classes.svg} />
                 <Typography variant="h5" align="center">
-                  Know the price up front
+                  Arrange a price upfront
                 </Typography>
               </div>
             </Grid>
             <Grid item xs={12} md={4}>
               <div className={classes.item}>
-                <AccountBalanceIcon className={classes.svg} />
+                <LibraryBooksIcon className={classes.svg} />
                 <Typography variant="h5" align="center">
-                  Always the best legal counseling
+                  We take care of the paperwork
                 </Typography>
               </div>
             </Grid>
           </Grid>
         </div>
-        {token ? (
+        {user && user.token ? (
           <Button
             color="secondary"
             variant="contained"

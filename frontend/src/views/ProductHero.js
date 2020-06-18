@@ -32,7 +32,7 @@ const styles = (theme) => ({
 });
 
 function ProductHero(props) {
-  const { token } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const { classes } = props;
 
   return (
@@ -51,9 +51,9 @@ function ProductHero(props) {
         variant="h5"
         className={classes.h5}
       >
-        Find the perfect freelance services for your business
+        Start doing what you are best at.
       </Typography>
-      {token ? (
+      {user && user.token ? (
         <Button
           color="secondary"
           variant="contained"

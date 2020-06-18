@@ -61,8 +61,6 @@ function Dashboard() {
   const classes = useStyles();
   const { user, profile } = useContext(AuthContext);
 
-  console.log('user: ', user)
-
   return (
     <React.Fragment>
       <MainNav />

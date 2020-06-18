@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import AuthContext from '../context/AuthContext';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -36,10 +37,18 @@ const useStyles = makeStyles((theme) => ({
   container: {
     padding: '1em',
   },
+  avatar: {
+    margin: '24px auto',
+    backgroundColor: theme.palette.secondary.main,
+    color: theme.palette.secondary.light,
+    fontFamily: 'Leckerli One',
+    fontWeight: '100',
+  },
 }));
 
 const Chat = () => {
   const classes = useStyles();
+  const { user } = useContext(AuthContext);
 
   return (
     <div>
@@ -49,12 +58,11 @@ const Chat = () => {
             <List>
               <ListItem button key="RemySharp">
                 <ListItemIcon>
-                  <Avatar
-                    alt="Remy Sharp"
-                    src="https://material-ui.com/static/images/avatar/1.jpg"
-                  />
+                  <Avatar className={classes.avatar}>
+                    {user.name.charAt(0)}
+                  </Avatar>
                 </ListItemIcon>
-                <ListItemText primary="John Wick"></ListItemText>
+                <ListItemText primary={user.name}></ListItemText>
               </ListItem>
             </List>
             <Divider />
@@ -85,16 +93,16 @@ const Chat = () => {
                     src="https://material-ui.com/static/images/avatar/3.jpg"
                   />
                 </ListItemIcon>
-                <ListItemText primary="Alice">Alice</ListItemText>
+                <ListItemText primary="Alice Newton">Alice Newton</ListItemText>
               </ListItem>
-              <ListItem button key="CindyBaker">
+              <ListItem button key="TedBaker">
                 <ListItemIcon>
                   <Avatar
-                    alt="Cindy Baker"
+                    alt="Ted Baker"
                     src="https://material-ui.com/static/images/avatar/2.jpg"
                   />
                 </ListItemIcon>
-                <ListItemText primary="Cindy Baker">Cindy Baker</ListItemText>
+                <ListItemText primary="Ted Baker">Ted Baker</ListItemText>
               </ListItem>
             </List>
           </Grid>
